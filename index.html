@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Особенная история ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Bad+Script&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #faf7f5;
+            color: #5a4a4a;
+            overflow-x: hidden;
+        }
+
+        /* ===== FLOATING PARTICLES ===== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(212, 165, 165, 0.3);
+            border-radius: 50%;
+            animation: float-particle linear infinite;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ===== INTRO SCREEN ===== */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5e6e0 0%, #e8d5e0 50%, #d5d8e8 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .intro-envelope {
+            width: 120px;
+            height: 90px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .intro-envelope:hover {
+            transform: scale(1.1);
+        }
+
+        .envelope-body {
+            width: 120px;
+            height: 80px;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+            border: 2px solid #e0c8c0;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .envelope-flap {
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-top: 50px solid #f0d8d0;
+            position: absolute;
+            top: 0;
+            transition: transform 0.5s ease;
+        }
+
+        .envelope-heart {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            z-index: 2;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+        }
+
+        .intro-text {
+            font-family: 'Bad Script', cursive;
+            font-size: 1.4rem;
+            color: #8a6a6a;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .intro-hint {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: #b89a9a;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #faf7f5 0%, #f5ece8 100%);
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: #7a5a5a;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .hero-subtitle {
+            font-family: 'Bad Script', cursive;
+            font-size: 1.2rem;
+            color: #a08080;
+            line-height: 1.8;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-hint span {
+            font-size: 0.75rem;
+            color: #b89a9a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid #c0a0a0;
+            border-bottom: 2px solid #c0a0a0;
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                #e0c8d0 10%, 
+                #d5c8e0 50%, 
+                #c8d5e0 90%, 
+                transparent 100%);
+            transform: translateX(-50%);
+        }
+
+        /* ===== CHAPTER ===== */
+        .chapter {
+            position: relative;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter:nth-child(odd) .chapter-content {
+            margin-left: auto;
+            margin-right: calc(50% + 40px);
+            text-align: right;
+        }
+
+        .chapter:nth-child(even) .chapter-content {
+            margin-left: calc(50% + 40px);
+            text-align: left;
+        }
+
+        .chapter-dot {
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 3px solid #d4a5a5;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .chapter.visible .chapter-dot {
+            background: #d4a5a5;
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .chapter-content {
+            max-width: calc(50% - 60px);
+        }
+
+        .chapter-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .chapter:nth-child(odd) .chapter-icon {
+            text-align: right;
+        }
+
+        .chapter:nth-child(even) .chapter-icon {
+            text-align: left;
+        }
+
+        .chapter-date {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: #b89a9a;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .chapter-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #7a5a5a;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .chapter-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #8a7070;
+            font-weight: 300;
+        }
+
+        .chapter-photo {
+            width: 100%;
+            max-width: 280px;
+            aspect-ratio: 4/3;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-top: 15px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .chapter:nth-child(odd) .chapter-photo {
+            margin-left: auto;
+        }
+
+        /* ===== SPECIAL CHAPTER (Pasha) ===== */
+        .chapter.special {
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
+
+        .chapter.special .chapter-content {
+            max-width: 100%;
+            margin: 0 auto !important;
+            text-align: center !important;
+        }
+
+        .chapter.special .chapter-dot {
+            width: 24px;
+            height: 24px;
+            border-color: #c49494;
+            background: #c49494;
+        }
+
+        .chapter.special .chapter-icon {
+            text-align: center !important;
+            font-size: 3rem;
+        }
+
+        .chapter.special .chapter-title {
+            font-size: 2rem;
+            color: #c49494;
+        }
+
+        .chapter.special .chapter-text {
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .highlight-name {
+            font-family: 'Bad Script', cursive;
+            font-size: 1.5em;
+            color: #c49494;
+            display: inline-block;
+            animation: glow-name 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-name {
+            0% { text-shadow: 0 0 5px rgba(196, 148, 148, 0.2); }
+            100% { text-shadow: 0 0 20px rgba(196, 148, 148, 0.4); }
+        }
+
+        /* ===== FINAL SECTION ===== */
+        .final-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, #f5ece8 0%, #f0e0e8 50%, #e8d8e8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cake {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .final-happy {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #7a5a5a;
+            margin-bottom: 10px;
+        }
+
+        .final-name {
+            font-family: 'Bad Script', cursive;
+            font-size: 3.5rem;
+            color: #c49494;
+            margin-bottom: 30px;
+        }
+
+        .final-thankyou {
+            max-width: 550px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: #8a7070;
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .final-thankyou strong {
+            color: #7a5a5a;
+            font-weight: 500;
+        }
+
+        .final-photo-frame {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #f0d8d0, #d8d0f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .final-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .final-photo-placeholder {
+            font-size: 3rem;
+        }
+
+        .final-signature {
+            font-family: 'Bad Script', cursive;
+            font-size: 1.3rem;
+            color: #a08080;
+            margin-top: 20px;
+        }
+
+        .final-date {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: #b89a9a;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        /* ===== CONFETTI CANVAS ===== */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* ===== HEART DIVIDER ===== */
+        .heart-divider {
+            text-align: center;
+            padding: 30px 0;
+            color: #d4b8b8;
+            font-size: 1.2rem;
+            letter-spacing: 15px;
+            opacity: 0.6;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .timeline-line {
+                left: 20px;
+            }
+
+            .chapter-dot {
+                left: 20px;
+            }
+
+            .chapter:nth-child(odd) .chapter-content,
+            .chapter:nth-child(even) .chapter-content {
+                margin-left: 50px;
+                margin-right: 0;
+                text-align: left;
+                max-width: calc(100% - 60px);
+            }
+
+            .chapter:nth-child(odd) .chapter-icon,
+            .chapter:nth-child(even) .chapter-icon {
+                text-align: left;
+            }
+
+            .chapter:nth-child(odd) .chapter-photo {
+                margin-left: 0;
+            }
+
+            .chapter-title {
+                font-size: 1.3rem;
+            }
+
+            .final-happy {
+                font-size: 2rem;
+            }
+
+            .final-name {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* ===== SCROLL PROGRESS BAR ===== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d4a5a5, #c8a5d4, #a5b8d4);
+            z-index: 1001;
+            transition: width 0.1s linear;
+        }
+
+        /* ===== MUSIC TOGGLE ===== */
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #e0c8c0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .music-toggle.playing {
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Particles Background -->
+<div class="particles" id="particles"></div>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Intro Screen -->
+<div class="intro-screen" id="introScreen">
+    <div class="intro-envelope" onclick="startStory()">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+        <div class="envelope-heart">💌</div>
+    </div>
+    <div class="intro-text">У каждого своя история...</div>
+    <div class="intro-hint">нажми на конверт</div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-title">Эта история началась<br>на море... 🌊</div>
+            <div class="hero-subtitle">
+                История о том, как два сердца нашли друг друга<br>
+                и о человеке, который помог им воссоединиться
+            </div>
+        </div>
+        <div class="scroll-hint">
+            <span>листай вниз</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+
+        <!-- Chapter 1: The Sea -->
+        <div class="chapter" data-chapter="1">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">🌊</span>
+                <div class="chapter-date">Почти 5 лет назад</div>
+                <div class="chapter-title">Море. «Люди рядом»</div>
+                <div class="chapter-text">
+                    Девушка отдыхала на море. Скучно было листать Telegram, и тут — раздел «Люди рядом». Один профиль. Она смотрела на него несколько дней. Думала — писать или нет? 
+                    <br><br>
+                    Когда решилась — казалось, он уже уехал...
+                </div>
+                <!-- PHOTO PLACEHOLDER: photo-sea.jpg -->
+                <!-- <img class="chapter-photo" src="photos/photo-sea.jpg" alt="Море"> -->
+            </div>
+        </div>
+
+        <!-- Chapter 2: Daily chats -->
+        <div class="chapter" data-chapter="2">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">💬</span>
+                <div class="chapter-date">Каждый день</div>
+                <div class="chapter-title">«Как будто знали друг друга всю жизнь»</div>
+                <div class="chapter-text">
+                    Они начали переписываться — каждый день, постоянно. Утром, днём, вечером. Тема находилась всегда. Два города, две жизни — но казалось, они всегда были рядом.
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 3: First meeting -->
+        <div class="chapter" data-chapter="3">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">🚂</span>
+                <div class="chapter-date">Впервые в Воронеж</div>
+                <div class="chapter-title">Москва — Воронеж</div>
+                <div class="chapter-text">
+                    Ей так хотелось его увидеть, что она решила поехать. Одна. В другой город. К человеку, которого знала только по переписке.
+                    <br><br>
+                    Он встретил. Они гуляли. Но всё было как-то... холодно. И когда она уехала — он перестал писать.
+                </div>
+                <!-- PHOTO PLACEHOLDER: photo-voronezh.jpg -->
+                <!-- <img class="chapter-photo" src="photos/photo-voronezh.jpg" alt="Воронеж"> -->
+            </div>
+        </div>
+
+        <!-- Chapter 4: Silence -->
+        <div class="chapter" data-chapter="4">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">🌙</span>
+                <div class="chapter-date">Долгая пауза</div>
+                <div class="chapter-title">Тишина</div>
+                <div class="chapter-text">
+                    У него была девушка. Почти три года. У неё — своя жизнь. Но иногда, в тихие вечера, она вспоминала о нём... 
+                    <br><br>
+                    И как потом оказалось — он вспоминал о ней тоже.
+                </div>
+            </div>
+        </div>
+
+        <div class="heart-divider">· · · ♡ · · ·</div>
+
+        <!-- Chapter 5: THE DAY - Pasha -->
+        <div class="chapter special" data-chapter="5">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">✨</span>
+                <div class="chapter-date">26 мая 2025 года</div>
+                <div class="chapter-title">Всё изменилось</div>
+                <div class="chapter-text">
+                    Саша рассказывал коллеге о той самой девушке из переписки. О том, как каждый день общались. Как всегда было о чём поговорить. И тогда один мудрый человек сказал ему:
+                    <br><br>
+                    <em style="font-size: 1.1rem;">«Напиши ей».</em>
+                    <br><br>
+                    И этот человек — <span class="highlight-name">Паша</span>
+                    <br><br>
+                    Саша послушал. Написал. Она ответила...
+                </div>
+            </div>
+        </div>
+
+        <div class="heart-divider">· · · ♡ · · ·</div>
+
+        <!-- Chapter 6: Reunion -->
+        <div class="chapter" data-chapter="6">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">💛</span>
+                <div class="chapter-date">Лето 2025</div>
+                <div class="chapter-title">С новой силой</div>
+                <div class="chapter-text">
+                    Они снова начали общаться — как будто не было этих лет тишины. Привязанность, которая никуда не исчезла, только стала сильнее.
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 7: August - Love -->
+        <div class="chapter" data-chapter="7">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">🏙️</span>
+                <div class="chapter-date">Август 2025</div>
+                <div class="chapter-title">Москва. Вместе.</div>
+                <div class="chapter-text">
+                    Саша приехал в Москву в отпуск. Они провели его вместе — каждый день, каждый вечер. Было так хорошо, что стало понятно: 
+                    <br><br>
+                    <em>это любовь</em> ❤️
+                </div>
+                <!-- PHOTO PLACEHOLDER: photo-august.jpg -->
+                <!-- <img class="chapter-photo" src="photos/photo-august.jpg" alt="Август, Москва"> -->
+            </div>
+        </div>
+
+        <!-- Chapter 8: Moving -->
+        <div class="chapter" data-chapter="8">
+            <div class="chapter-dot"></div>
+            <div class="chapter-content">
+                <span class="chapter-icon">🏠</span>
+                <div class="chapter-date">Декабрь 2025</div>
+                <div class="chapter-title">Он переехал</div>
+                <div class="chapter-text">
+                    Каждые две недели — поезд в Воронеж и обратно. И однажды они поняли: нужно быть вместе. Саша собрал вещи и переехал в Москву.
+                    <br><br>
+                    Аня и Саша — наконец-то рядом.
+                </div>
+                <!-- PHOTO PLACEHOLDER: photo-together.jpg -->
+                <!-- <img class="chapter-photo" src="photos/photo-together.jpg" alt="Вместе"> -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Final Section -->
+    <section class="final-section" id="finalSection">
+        <div class="final-cake">🎂</div>
+        <div class="final-happy">С днём рождения!</div>
+        <div class="final-name">Паша</div>
+        
+        <div class="final-photo-frame" id="finalPhotoFrame">
+            <span class="final-photo-placeholder">📸</span>
+            <!-- PHOTO PLACEHOLDER: photo-anya-sasha.jpg -->
+            <!-- <img src="photos/photo-anya-sasha.jpg" alt="Аня и Саша"> -->
+        </div>
+
+        <div class="final-thankyou">
+            Паша, спасибо тебе за то, что в тот майский день ты сказал Саше: <strong>«Напиши ей»</strong>.
+            <br><br>
+            Без твоих слов, возможно, мы бы так и остались лишь воспоминанием друг о друге. А теперь мы — семья. Мы живём вместе, мы счастливы, и во многом это благодаря <strong>тебе</strong>.
+            <br><br>
+            Желаем тебе крепкого здоровья, настоящих друзей рядом, и чтобы твоя жизнь была полна таких же счастливых моментов, какой ты подарил нам.
+            <br><br>
+            С любовью и благодарностью,
+        </div>
+
+        <div class="final-signature">Аня и Саша ❤️</div>
+        <div class="final-date">5 июня 2026, Воронеж</div>
+    </section>
+
+</div>
+
+<!-- Music Toggle -->
+<!-- <div class="music-toggle" id="musicToggle" onclick="toggleMusic()">🎵</div> -->
+
+<script>
+    // ===== PARTICLES =====
+    function createParticles() {
+        const container = document.getElementById('particles');
+        const colors = [
+            'rgba(212, 165, 165, 0.3)',
+            'rgba(180, 165, 212, 0.3)',
+            'rgba(165, 184, 212, 0.3)',
+            'rgba(212, 180, 165, 0.3)',
+            'rgba(200, 175, 195, 0.3)'
+        ];
+        
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = (Math.random() * 8 + 4) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            particle.style.animationDelay = (Math.random() * 10) + 's';
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // ===== INTRO SCREEN =====
+    function startStory() {
+        const intro = document.getElementById('introScreen');
+        const main = document.getElementById('mainContent');
+        
+        intro.classList.add('hidden');
+        
+        setTimeout(() => {
+            intro.style.display = 'none';
+            main.classList.add('visible');
+        }, 1200);
+    }
+
+    // ===== SCROLL PROGRESS =====
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+    });
+
+    // ===== SCROLL REVEAL CHAPTERS =====
+    const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const chapterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.chapter').forEach(chapter => {
+        chapterObserver.observe(chapter);
+    });
+
+    // ===== CONFETTI =====
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    let confettiActive = false;
+
+    function resizeCanvas() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class ConfettiPiece {
+        constructor() {
+            this.x = Math.random() * confettiCanvas.width;
+            this.y = -20;
+            this.size = Math.random() * 8 + 4;
+            this.speedY = Math.random() * 3 + 2;
+            this.speedX = Math.random() * 4 - 2;
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 10 - 5;
+            this.opacity = 1;
+            this.color = [
+                '#d4a5a5', '#c8a5d4', '#a5b8d4', '#d4c8a5', 
+                '#e8b4b4', '#b4c8e8', '#d4b4e8', '#e8d4b4',
+                '#f0c0c0', '#c0d0f0', '#e0c0e0', '#f0e0c0'
+            ][Math.floor(Math.random() * 12)];
+            this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+        }
+
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            this.rotation += this.rotationSpeed;
+            this.speedY += 0.05;
+            this.opacity -= 0.003;
+        }
+
+        draw() {
+            confettiCtx.save();
+            confettiCtx.translate(this.x, this.y);
+            confettiCtx.rotate(this.rotation * Math.PI / 180);
+            confettiCtx.globalAlpha = this.opacity;
+            confettiCtx.fillStyle = this.color;
+            
+            if (this.shape === 'rect') {
+                confettiCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 0.6);
+            } else {
+                confettiCtx.beginPath();
+                confettiCtx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                confettiCtx.fill();
+            }
+            
+            confettiCtx.restore();
+        }
+    }
+
+    function launchConfetti() {
+        confettiActive = true;
+        let count = 0;
+        const maxPieces = 200;
+        
+        const interval = setInterval(() => {
+            for (let i = 0; i < 5; i++) {
+                confettiPieces.push(new ConfettiPiece());
+            }
+            count++;
+            if (count > 40) {
+                clearInterval(interval);
+            }
+        }, 50);
+    }
+
+    function animateConfetti() {
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        
+        confettiPieces = confettiPieces.filter(p => p.opacity > 0 && p.y < confettiCanvas.height + 50);
+        
+        confettiPieces.forEach(piece => {
+            piece.update();
+            piece.draw();
+        });
+        
+        requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    // Detect when final section is visible
+    const finalObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !confettiActive) {
+                launchConfetti();
+            }
+        });
+    }, { threshold: 0.3 });
+
+    finalObserver.observe(document.getElementById('finalSection'));
+
+    // ===== MUSIC (optional, uncomment to enable) =====
+    // const audio = new Audio('background-music.mp3');
+    // audio.loop = true;
+    // let isPlaying = false;
+    // 
+    // function toggleMusic() {
+    //     const btn = document.getElementById('musicToggle');
+    //     if (isPlaying) {
+    //         audio.pause();
+    //         btn.classList.remove('playing');
+    //         btn.textContent = '🎵';
+    //     } else {
+    //         audio.play();
+    //         btn.classList.add('playing');
+    //         btn.textContent = '🎶';
+    //     }
+    //     isPlaying = !isPlaying;
+    // }
+</script>
+
+</body>
+</html>
